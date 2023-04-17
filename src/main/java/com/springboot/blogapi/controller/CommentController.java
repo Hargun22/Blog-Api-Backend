@@ -2,6 +2,7 @@ package com.springboot.blogapi.controller;
 
 import com.springboot.blogapi.payload.CommentDto;
 import com.springboot.blogapi.service.CommentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/")
+@Tag(
+        name = "CRUD Operations on Comments Resource"
+)
 public class CommentController {
 
     private CommentService commentService;

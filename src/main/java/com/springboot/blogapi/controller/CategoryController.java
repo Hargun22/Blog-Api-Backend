@@ -2,6 +2,8 @@ package com.springboot.blogapi.controller;
 
 import com.springboot.blogapi.payload.CategoryDto;
 import com.springboot.blogapi.service.CategoryService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
+@Tag(
+        name = "CRUD Operations on Comments Resource"
+)
 public class CategoryController {
 
     private CategoryService categoryService;
@@ -19,6 +24,9 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @SecurityRequirement(
+            name = "Bearer Auth"
+    )
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryDto> addCategory(@RequestBody CategoryDto categoryDto) {
@@ -38,6 +46,9 @@ public class CategoryController {
         return new ResponseEntity<>(categoryDto, HttpStatus.OK);
     }
 
+    @SecurityRequirement(
+            name = "Bearer Auth"
+    )
     @PutMapping("/{categoryId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryDto> updateCategory(@PathVariable(value = "categoryId") Long categoryId,
@@ -46,6 +57,9 @@ public class CategoryController {
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 
+    @SecurityRequirement(
+            name = "Bearer Auth"
+    )
     @DeleteMapping("/{categoryId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteCategory(@PathVariable(value = "categoryId") Long categoryId) {

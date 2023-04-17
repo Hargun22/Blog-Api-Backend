@@ -4,6 +4,10 @@ import com.springboot.blogapi.payload.PostDto;
 import com.springboot.blogapi.payload.PostResponse;
 import com.springboot.blogapi.service.PostService;
 import com.springboot.blogapi.utils.AppConstants;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +18,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
+@Tag(
+        name = "CRUD Operations on Posts Resource"
+)
 public class PostController {
 
     private PostService postService;
@@ -23,6 +30,17 @@ public class PostController {
     }
 
     // create blog post
+    @Operation(
+            summary = "Create a new blog post",
+            description = "Create a new blog post"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "HTTP 201: Created."
+    )
+    @SecurityRequirement(
+            name = "Bearer Auth"
+    )
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
@@ -31,6 +49,14 @@ public class PostController {
     }
 
     // get all blog posts
+    @Operation(
+            summary = "Get all blog posts",
+            description = "Get all blog posts"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP 200: Ok."
+    )
     @GetMapping
     public PostResponse getAllPosts(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
@@ -42,12 +68,31 @@ public class PostController {
     }
 
     // get blog post by id
+    @Operation(
+            summary = "Get blog post by id",
+            description = "Get blog post by id"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP 200: Ok."
+    )
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPost(@PathVariable Long id) {
         return ResponseEntity.ok(postService.getPost(id));
     }
 
     // update blog post
+    @Operation(
+            summary = "Update blog post by id",
+            description = "Update blog post by id"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP 200: Ok."
+    )
+    @SecurityRequirement(
+            name = "Bearer Auth"
+    )
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<PostDto> updatePost(@PathVariable(name = "id") Long id, @Valid @RequestBody PostDto postDto) {
@@ -55,6 +100,14 @@ public class PostController {
     }
 
     // get all blog posts by category id
+    @Operation(
+            summary = "Get all blog posts by category id",
+            description = "Get all blog posts by category id"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP 200: Ok."
+    )
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<PostDto>> getAllPostsByCategoryId(@PathVariable(name = "categoryId") Long id) {
         List<PostDto> postDtoList = postService.getAllPostsByCategoryId(id);
@@ -62,6 +115,17 @@ public class PostController {
     }
 
     // delete blog post
+    @Operation(
+            summary = "Delete blog post by id",
+            description = "Delete blog post by id"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP 200: Ok."
+    )
+    @SecurityRequirement(
+            name = "Bearer Auth"
+    )
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable(name = "id") Long id) {
