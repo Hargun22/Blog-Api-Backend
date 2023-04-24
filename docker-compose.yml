@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  mysqldb:
+    image: mysql
+    container_name: mysqldb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Rootmysql
+      MYSQL_DATABASE: myblog
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Rootmysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - blog
+
+  blog:
+    container_name: blog
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - blog
+    depends_on:
+      - mysql
+
+networks:
+  blog:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
+
